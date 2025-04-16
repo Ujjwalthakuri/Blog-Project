@@ -1,0 +1,7 @@
+.regs {
+    position: absolute;
+    top: 80px; /* Below the fixed navbar */
+    left: 0;
+    width: 100%;
+    padding: 20px;
+}
