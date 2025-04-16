@@ -36,12 +36,13 @@
           <!-- Right part: posts -->
           <div class="col-md-8 container_post">
             <h1 class="text-primary"> Recent Post </h1>
+            {% for i in post %}
             <div class="card shadow my-3">
-              {% for i in post %}
               <div class="card-body ">
                 <div class="row">
                   <div class="col-md-4">
                     <img src="" alt="img" class="img-fluid">
+                    <h6>{{i.author}}</h6>
                   </div>
                   <div class="col-md-8">
                     <small>{{i.date}}  </small>
@@ -49,14 +50,13 @@
                     <a class="h3 text-primary" href="">{{i.title}} </a>
                     <p class="text-justify my-3">{{i.content}} </p>
                   </div>
-                  {% endfor %}
                 </div>
               </div>
             </div>
-      
+            {% endfor %}
           </div> <!-- end of right side -->
+
         </div> <!-- end of row -->
       </div> <!-- end of container -->
   
       {% endblock body_part %}
-
