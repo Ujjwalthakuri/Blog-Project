@@ -8,7 +8,9 @@ urlpatterns = [
     path('signin/', signin, name='signin'),
     path('index/', index, name='index'),
     path('profile/', profile, name='profile'),
-    # path('signput/', signout, name='signout'),
+    path('postdetail/<int:pk>/', post_detail, name='postdetail'),
+    path('postedit/<int:pk>/', post_edit, name='postedit'),
+    path('postdel/<int:pk>/', post_del, name='postdel'),
     path('signout/', signout, name='signout'),  
     
 ]

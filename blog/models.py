@@ -18,7 +18,7 @@ class postModel(models.Model):
 
 class profileModel(models.Model):
         author = models.OneToOneField(User, on_delete=models.CASCADE)
-        image = models.ImageField(default='default.jpg', upload_to='profile', validators=[FileExtensionValidator(['png', 'jpg'])])
+        image = models.ImageField(default='media/default.jpg', upload_to='profile', validators=[FileExtensionValidator(['png', 'jpg'])])
         
         def __str__(self):
             return f'{self.author.username} profile'

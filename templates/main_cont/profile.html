@@ -47,12 +47,12 @@ Profile Page
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-4">
-                    <img class="img-thumbnail" src="{{ profile.image.url }}" alt="profile-img">
+                    <img class="img-thumbnail" src="{{ user.profilemodel.image.url }}" alt="profile-img">
                   </div>
                   <div class="col-md-8">
                     <small> {{ i.date }} </small>
                     <hr>
-                    <a class="h3 text-primary" href="">{{ i.title }}</a>
+                    <a class="h3 text-primary" href="{% url "postdetail" i.id %}">{{ i.title }}</a>
                     <p class="text-justify my-3">{{ i.content }} </p>
                   </div>
                 </div>
@@ -64,6 +64,7 @@ Profile Page
         </div> <!-- end of row -->
 
       <!-- Modal -->
+<!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
       <div class="modal-content">
@@ -72,17 +73,26 @@ Profile Page
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
-              <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="modal-body">
-                  {{ form.as_p }}
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
-                  <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-              </form>
-              
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-md-4">
+                      <img class="img-thumbnail" src="{{ user.profilemodel.image.url }}" alt="">
+                  </div>
+                  <div class="col-md-8">
+                      <form method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          {% load crispy_forms_tags %}
+                          {{ u_form|crispy }}
+                          {{ p_form|crispy }}
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary btn-sm"
+                                  data-dismiss="modal">Cancel</button>
+                              <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                          </div>
+                      </form>
+                  </div>
+              </div>
           </div>
 
       </div>

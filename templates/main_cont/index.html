@@ -41,13 +41,13 @@
               <div class="card-body ">
                 <div class="row">
                   <div class="col-md-4">
-                    {% comment %} <img class="img-thumbnail" src="{{user.profilemodel.image.url}}" alt="profile-img"> {% endcomment %}
+                    <img class="img-thumbnail" src="{{i.author.profilemodel.image.url}}" alt="profile-img">
                     <h6>{{i.author}}</h6>
                   </div>
                   <div class="col-md-8">
                     <small>{{i.date}}  </small>
                     <hr>
-                    <a class="h3 text-primary" href="">{{i.title}} </a>
+                    <a class="h3 text-primary" href="{% url "postdetail" i.id %}">{{i.title}} </a>
                     <p class="text-justify my-3">{{i.content}} </p>
                   </div>
                 </div>
@@ -59,4 +59,4 @@
         </div> <!-- end of row -->
       </div> <!-- end of container -->
   
-      {% endblock body_part %}
+{% endblock body_part %}

@@ -64,21 +64,68 @@ def index(request):
     return render(request, 'main_cont/index.html', context)
 
 def profile(request):
-    
+    # Ensure the user has a profilemodel
+    profile, created = profileModel.objects.get_or_create(author=request.user)
+
+    if request.method == 'POST':
+        u_form = userUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            return redirect('profile')
+    else:
+        u_form = userUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=profile)
+
     # Get posts by the current user
     user_posts = postModel.objects.filter(author=request.user)
 
-    # Get the profile for the current user
-    try:
-        user_profile = profileModel.objects.get(author=request.user)
-    except profileModel.DoesNotExist:
-        user_profile = None  # or handle redirect to profile creation
-
     context = {
         'post': user_posts,
-        'profile': user_profile
+        'profile': profile,
+        'u_form': u_form,
+        'p_form': p_form,
     }
     return render(request, 'main_cont/profile.html', context)
+
+
+
+def post_detail(request, pk):
+    post = postModel.objects.get(id=pk)
+    context={
+        'post':post,
+    }
+    return render(request, 'main_cont/postdetail.html', context)
+
+
+
+def post_edit(request, pk):
+    post = postModel.objects.get(id=pk)
+    if request.method =="POST":
+        form = PostUpdateForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect("postdetail", pk=post.id)
+    else:
+        form = PostUpdateForm(instance=post)
+    context = {
+        'post' : post,
+        "form": form
+    }
+    return render(request, 'main_cont/postedit.html', context)
+
+
+def post_del(request, pk):
+    post = postModel.objects.get(id=pk)
+    if request.method =="POST":
+        post.delete()
+        return redirect("profile")
+    context={
+        'post':post,
+    }
+    return render(request, 'main_cont/postdel.html', context)
+
 
 
 def signout(request):
