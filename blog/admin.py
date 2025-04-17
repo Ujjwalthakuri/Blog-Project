@@ -6,3 +6,6 @@ from .models import *
 @admin.register(postModel)
 class Posts_adm(admin.ModelAdmin):
     list_display=("id", 'title', 'date')
+    
+
+admin.site.register(profileModel)

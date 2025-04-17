@@ -1,0 +1,19 @@
+.background{
+    position: absolute;
+    height:100%;
+    width:100%;
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("/static/image/background.webp");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.body_written{
+    text-align: center;
+    padding-top: 30vh;
+}
+.body_written h1{
+    font-size: 8vmin;
+}
+.body_written button a{
+    text-decoration: none;
+}

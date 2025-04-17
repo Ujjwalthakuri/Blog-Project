@@ -64,7 +64,22 @@ def index(request):
     return render(request, 'main_cont/index.html', context)
 
 def profile(request):
-    return render (request, 'main_cont/profile.html')
+    
+    # Get posts by the current user
+    user_posts = postModel.objects.filter(author=request.user)
+
+    # Get the profile for the current user
+    try:
+        user_profile = profileModel.objects.get(author=request.user)
+    except profileModel.DoesNotExist:
+        user_profile = None  # or handle redirect to profile creation
+
+    context = {
+        'post': user_posts,
+        'profile': user_profile
+    }
+    return render(request, 'main_cont/profile.html', context)
+
 
 def signout(request):
     logout(request)
