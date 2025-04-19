@@ -9,3 +9,5 @@ class Posts_adm(admin.ModelAdmin):
     
 
 admin.site.register(profileModel)
+
+admin.site.register(Comment)

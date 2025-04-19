@@ -93,8 +93,19 @@ def profile(request):
 
 def post_detail(request, pk):
     post = postModel.objects.get(id=pk)
+    if request.method == 'POST':
+        c_form = CommentForm(request.POST)
+        if c_form.is_valid():
+            instance= c_form.save(commit=False)
+            instance.user = request.user
+            instance.post = post 
+            instance.save()
+            return redirect ('postdetail', pk=post.id)
+    else:
+        c_form = CommentForm()
     context={
         'post':post,
+        'c_form': c_form
     }
     return render(request, 'main_cont/postdetail.html', context)
 

@@ -11,17 +11,31 @@ class postModel(models.Model):
     
     class Meta: 
         ordering = ('-date',)
+    
+    def comment_count(self):
+        return self.comment_set.all().count()
+    
+    def comments(self):
+        return self.comment_set.all()
 
     def __str__(self):
         return f"{self.title} by {self.author.username if self.author else 'Unknown Author'}"
 
 
 class profileModel(models.Model):
-        author = models.OneToOneField(User, on_delete=models.CASCADE)
-        image = models.ImageField(default='media/default.jpg', upload_to='profile', validators=[FileExtensionValidator(['png', 'jpg'])])
+    author = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(default='media/default.jpg', upload_to='profile', validators=[FileExtensionValidator(['png', 'jpg'])])
         
-        def __str__(self):
-            return f'{self.author.username} profile'
+    def __str__(self):
+        return f'{self.author.username} profile'
+        
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(postModel,  on_delete=models.CASCADE)
+    content = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.content
 
     
     
