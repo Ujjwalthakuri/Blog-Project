@@ -11,3 +11,7 @@ class Posts_adm(admin.ModelAdmin):
 admin.site.register(profileModel)
 
 admin.site.register(Comment)
+
+@admin.register(CategoryModel)
+class categoryModelAdmin(admin.ModelAdmin):
+    list_display=("name",)

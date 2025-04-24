@@ -17,3 +17,16 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('content',)
+      
+    #   search + filter  
+class PostFilterForm(forms.Form):
+    title = forms.CharField(required=False, label="Title")
+    category = forms.ModelChoiceField(queryset=CategoryModel.objects.all(), required=False)
+    author = forms.CharField(required=False)
+    # tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+    date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    # end_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    
+    class Meta:
+        model = CategoryModel
+        fields = ('name',)

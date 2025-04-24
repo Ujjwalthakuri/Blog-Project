@@ -1,0 +1,44 @@
+{% extends "main/head.html" %}
+{% block title %}Search Blog Posts{% endblock %}
+{% load crispy_forms_tags %}
+{% block body_part %}
+
+<div class="container mt-5 pt-5">
+  <h5 class='search_head'>Search Blog Posts</h5>
+  <form method="get" class="mb-4">
+    {{ form|crispy }}
+    <button class="btn btn-primary" type="submit">Search</button>
+  </form>
+
+  <hr>
+
+  {% if searched %}
+    <div class="col-md-8 container_post">
+      <h1 class="text-primary">Results</h1>
+      {% if posts %}
+        {% for i in posts %}
+        <div class="card shadow my-3">
+          <div class="card-body ">
+            <div class="row">
+              <div class="col-md-4">
+                <img class="img-thumbnail" src="{{ i.author.profilemodel.image.url }}" alt="profile-img">
+                <h6>{{ i.author }}</h6>
+              </div>
+              <div class="col-md-8">
+                <small>{{ i.date }}</small>
+                <hr>
+                <a class="h3 text-primary" href="{% url "postdetail" i.id %}">{{ i.title }}</a>
+                <p class="text-justify my-3">{{ i.content|truncatewords:20 }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p>No posts found.</p>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

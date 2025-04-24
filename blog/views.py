@@ -5,6 +5,8 @@ from .forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .models import *
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 # Create your views here.
  
 def home(request):
@@ -44,9 +46,24 @@ def signin(request):
         form = AuthenticationForm( initial = initial_data)
     return render(request, 'base_cont/signin.html', {'form': form})
 
-
+@login_required
 def index(request):
-    post = postModel.objects.all()
+    categories = CategoryModel.objects.all()
+    posts = postModel.objects.all()
+
+    # Handle filtering
+    title = request.GET.get('title')
+    category = request.GET.get('category')
+    author = request.GET.get('author')
+
+    if title:
+        posts = posts.filter(title__icontains=title)
+    if category:
+        posts = posts.filter(category__id=category)
+    if author:
+        posts = posts.filter(author__username__icontains=author)
+
+    # Handle new post creation
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
@@ -58,11 +75,13 @@ def index(request):
         form = PostForm()
 
     context = {
-        'post': post,
-        'forms': form
+        'post': posts,
+        'forms': form,
+        'categories': categories,
     }
     return render(request, 'main_cont/index.html', context)
 
+@login_required
 def profile(request):
     # Ensure the user has a profilemodel
     profile, created = profileModel.objects.get_or_create(author=request.user)
@@ -90,7 +109,7 @@ def profile(request):
     return render(request, 'main_cont/profile.html', context)
 
 
-
+@login_required
 def post_detail(request, pk):
     post = postModel.objects.get(id=pk)
     if request.method == 'POST':
@@ -110,7 +129,7 @@ def post_detail(request, pk):
     return render(request, 'main_cont/postdetail.html', context)
 
 
-
+@login_required
 def post_edit(request, pk):
     post = postModel.objects.get(id=pk)
     if request.method =="POST":
@@ -126,7 +145,7 @@ def post_edit(request, pk):
     }
     return render(request, 'main_cont/postedit.html', context)
 
-
+@login_required
 def post_del(request, pk):
     post = postModel.objects.get(id=pk)
     if request.method =="POST":
@@ -143,9 +162,34 @@ def signout(request):
     logout(request)
     return redirect ('home')
 
-def post(request):
-    return HttpResponse
+# def post(request):
+#     return HttpResponse
+@login_required
+def search_posts(request):
+    form = PostFilterForm(request.GET)
+    posts = postModel.objects.none()  # empty initially
+    searched = False
 
+    if request.GET:
+        searched = True
+        if form.is_valid():
+            title = form.cleaned_data.get('title')
+            category = form.cleaned_data.get('category')
+            author = form.cleaned_data.get('author')
+            date = form.cleaned_data.get('start_date')
 
+            posts = postModel.objects.all()
+            if title:
+                posts = posts.filter(title__icontains=title)
+            if category:
+                posts = posts.filter(category=category)
+            if author:
+                posts = posts.filter(author__username__icontains=author)
+            if date:
+                posts = posts.filter(published_date__gte=date)
 
- 
+    return render(request, 'main_cont/search_results.html', {
+        'form': form,
+        'posts': posts,
+        'searched': searched
+    })

@@ -5,6 +5,31 @@
 
  {% block body_part %}
       <div class="container">
+        <!-- SEARCH FORM -->
+<form method="GET" class="mb-4">
+  <div class="row g-2">
+    <div class="col-md-3">
+      <input type="text" name="title" class="form-control" placeholder="Search by title" value="{{ request.GET.title }}">
+    </div>
+    <div class="col-md-3">
+      <input type="text" name="author" class="form-control" placeholder="Search by author" value="{{ request.GET.author }}">
+    </div>
+    <div class="col-md-3">
+      <select name="category" class="form-control">
+        <option value="">All Categories</option>
+        {% for category in categories %}
+          <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+            {{ category.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <button type="submit" class="btn btn-outline-primary w-100">Search</button>
+    </div>
+  </div>
+</form>
+
         <div class="row mt-5 pt-5 container_part">
           <!-- Left part: form -->
           <div class="col-md-4 container_form">
@@ -16,6 +41,15 @@
                     <div class="mb-3">
                       <label for="exampleInputEmail1" class="form-label">Title:</label>
                       <input type="text" class="form-control" name="title"  id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                      <label for="category" class="form-label">Category:</label>
+                      <select class="form-control" name="category" id="category">
+                        <option value="">-- Select Category --</option>
+                        {% for category in categories %}
+                          <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                      </select>
                     </div>
                     <div class="mb-3">
                       <label for="exampleInputPassword1" class="form-label">Content:</label>
