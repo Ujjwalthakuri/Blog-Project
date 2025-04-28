@@ -49,19 +49,26 @@ def signin(request):
 @login_required
 def index(request):
     categories = CategoryModel.objects.all()
-    posts = postModel.objects.all()
+    
+    # Fetch all posts
+    posts_all = postModel.objects.all()
 
-    # Handle filtering
+    # Apply filters
     title = request.GET.get('title')
     category = request.GET.get('category')
     author = request.GET.get('author')
 
     if title:
-        posts = posts.filter(title__icontains=title)
+        posts_all = posts_all.filter(title__icontains=title)
     if category:
-        posts = posts.filter(category__id=category)
+        posts_all = posts_all.filter(category__id=category)
     if author:
-        posts = posts.filter(author__username__icontains=author)
+        posts_all = posts_all.filter(author__username__icontains=author)
+
+    # Apply pagination after filtering
+    paginator = Paginator(posts_all, 2)
+    page_number = request.GET.get('page')
+    posts = paginator.get_page(page_number)
 
     # Handle new post creation
     if request.method == 'POST':
@@ -75,11 +82,12 @@ def index(request):
         form = PostForm()
 
     context = {
-        'post': posts,
+        'post': posts,              # This is now paginated
         'forms': form,
         'categories': categories,
     }
     return render(request, 'main_cont/index.html', context)
+
 
 @login_required
 def profile(request):

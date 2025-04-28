@@ -6,6 +6,7 @@
  {% block body_part %}
       <div class="container">
         <!-- SEARCH FORM -->
+         {% csrf_token %}
 <form method="GET" class="mb-4">
   <div class="row g-2">
     <div class="col-md-3">
@@ -88,6 +89,39 @@
               </div>
             </div>
             {% endfor %}
+
+            {% comment %} Pagination controls  {% endcomment %}
+<nav aria-label="Page navigation" class="mt-4">
+  <ul class="pagination justify-content-center">
+    {% if post.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ post.previous_page_number }}{% if request.GET.title %}&title={{ request.GET.title }}{% endif %}{% if request.GET.author %}&author={{ request.GET.author }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+    {% endif %}
+
+    {% for num in post.paginator.page_range %}
+      {% if post.number == num %}
+        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+      {% else %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ num }}{% if request.GET.title %}&title={{ request.GET.title }}{% endif %}{% if request.GET.author %}&author={{ request.GET.author }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">{{ num }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if post.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ post.next_page_number }}{% if request.GET.title %}&title={{ request.GET.title }}{% endif %}{% if request.GET.author %}&author={{ request.GET.author }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+{% comment %} pagination control end  {% endcomment %}
+
           </div> <!-- end of right side -->
 
         </div> <!-- end of row -->
